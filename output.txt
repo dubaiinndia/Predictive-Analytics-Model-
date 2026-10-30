@@ -1,0 +1,51 @@
+[data] Delhi: 1826 daily rows, 0.5% missing AQI
+[data] monthly points: 60, missing months: 0
+
+[stationarity] level                  ADF p=0.7217 | KPSS p=0.1000 -> NOT clearly stationary
+[stationarity] first difference (d=1) ADF p=0.0000 | KPSS p=0.1000 -> stationary
+[stationarity] seasonal diff (D=1, s=12) ADF p=0.0822 | KPSS p=0.1000 -> NOT clearly stationary
+[stationarity] seasonal + first diff  ADF p=0.0000 | KPSS p=0.1000 -> stationary
+
+[order selection by AIC on training data]
+  AR      order=(2, 0, 0) seasonal=- AIC=15.6
+  MA      order=(0, 0, 3) seasonal=- AIC=18.0
+  ARMA    order=(2, 0, 0) seasonal=- AIC=15.6
+  ARIMA   order=(2, 1, 1) seasonal=- AIC=20.2
+  SARIMA  order=(1, 0, 2) seasonal=(1, 1, 0, 12) AIC=-1.6
+  Harmonic-ARIMAX order=(1, 0, 0) seasonal=- AIC=-9.7
+
+[test results - walk-forward, 1-step ahead]
+                    RMSE     MAE  MAPE %     AIC     BIC
+Seasonal naive   28.312  25.395  12.702     NaN     NaN
+Harmonic-ARIMAX  35.583  31.751  15.664  -9.686   3.265
+SARIMA           43.129  31.152  17.586  -1.639   4.038
+ARIMA            45.352  36.511  18.508  20.202  27.429
+AR               45.873  38.210  19.369  15.552  22.866
+ARMA             45.873  38.210  19.369  15.552  22.866
+MA               53.311  44.327  21.291  18.005  26.926
+Naive            68.021  53.089  24.596     NaN     NaN
+
+[Diebold-Mariano, SARIMA vs baseline (negative stat = SARIMA better)]
+  vs Naive           DM=-1.556  p=0.148
+  vs Seasonal naive  DM=1.232  p=0.244
+[Diebold-Mariano, Harmonic-ARIMAX vs baseline (negative stat = Harmonic better)]
+  vs Naive           DM=-1.849  p=0.091
+  vs Seasonal naive  DM=1.531  p=0.154
+  vs SARIMA          DM=-0.630  p=0.542
+
+[Ljung-Box on SARIMA residuals - p > 0.05 means white noise]
+      lb_stat  lb_pvalue
+6    95.1156        0.0
+12  100.6249        0.0
+
+[Ljung-Box on Harmonic-ARIMAX residuals - p > 0.05 means white noise]
+     lb_stat  lb_pvalue
+6    0.3493     0.9966
+12   8.0007     0.7132
+
+[largest absolute errors of the best model (Seasonal naive) - explain these in error analysis]
+2019-12-01    46.5
+2019-10-01    39.4
+2019-03-01    36.8
+
+Saved: PNG plots and results_table.csv
